@@ -1,0 +1,41 @@
+pipeline {  
+    agent { label 'Docker-slave'}
+
+    stages {
+        stage('clone') {
+            steps {
+                git 'https://github.com/thaison91hn/thaison91hn.git'
+            }
+        }
+        stage('install dependencies') {
+            steps {
+                sh 'npm install'
+				echo "start app"
+				sh 'nohup node index.js &'
+				echo "npm test"
+				sh 'npm test'
+			}
+		}
+		stage('Integration') {
+		    junit 'test.xml'
+        }
+        stage('build image and push image to dockerhub') {
+            steps {
+			    withDockerRegistry(credentialsId:'d042ad57-c098-430e-be65-922a7a422a10', url: 'https://index.docker.io/v1/') {
+                    echo "build image"
+                    sh 'docker build nodejs:$BUILD_NUMBER .'
+					echo "tag image"
+					sh 'docker tag nodejs:BUILD_NUMBER
+                    echo "push image to dockerhub"
+                    sh 'docker push thaison91hn/thaison91hn.git:BUILD_NUMBER'
+				}
+            }
+        }  
+    }
+
+    post {
+        success {
+             emailext body: 'hello', subject: 'send email test to sondv', to: 'thaison.hpa91@gmail.com'
+        }
+    }
+}
