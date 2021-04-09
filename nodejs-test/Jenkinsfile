@@ -7,7 +7,7 @@ pipeline {
                 git 'https://github.com/thaison91hn/thaison91hn.git'
             }
         }
-        stage('install dependencies') {
+        stage ('install dependencies') {
             steps {
                 sh 'npm install'
 		echo "start app"
@@ -16,8 +16,8 @@ pipeline {
 		sh 'npm test'
 			}
 		}
-		stage('Integration') {
-		    junit 'test.xml'
+	stage ('Integration') {
+		junit 'test.xml'
         }
         stage('build image and push image to dockerhub') {
             steps {
