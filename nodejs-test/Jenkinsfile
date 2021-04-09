@@ -9,7 +9,7 @@ pipeline {
         }
         stage ('install dependencies') {
             steps {
-                sh 'npm install'
+                sh '/usr/bin/npm install'
 		echo "start app"
 		sh 'nohup node index.js &'
 		echo "npm test"
