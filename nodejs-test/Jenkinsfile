@@ -17,7 +17,9 @@ pipeline {
 			}
 		}
 	stage ('Integration') {
+	    steps {
 		junit 'test.xml'
+	    }
         }
         stage('build image and push image to dockerhub') {
             steps {
